@@ -15,7 +15,7 @@ load_dotenv()
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['fakecsvdanya.herokuapp.com']
 
@@ -121,9 +121,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_URL = '/media/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# MEDIA_URL = '/media/'
+#
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 REDIS_URL = os.environ.get('REDIS_URL')
 
 CELERY_TIMEZONE = "Europe/Kiev"
@@ -136,17 +136,17 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
 
 
-# URL_GOOGLE_JSON = os.environ.get('URL_GOOGLE_JSON')
-# if os.path.exists(os.path.join(BASE_DIR, 'googledrive.json')):
-#     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(os.path.join(BASE_DIR, 'googledrive.json'))
-# else:
-#     gdown.download(URL_GOOGLE_JSON, quiet=False)
-#     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(os.path.join(BASE_DIR, 'googledrive.json'))
-# # configuration for media file storing and reriving media file from gcloud
-# DEFAULT_FILE_STORAGE = os.environ.get('DEFAULT_FILE_STORAGE')
-# GS_PROJECT_ID = os.environ.get('GS_PROJECT_ID')
-# GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
-# MEDIA_ROOT = 'media/'
-# UPLOAD_ROOT = 'media/uploads/'
-# MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_BUCKET_NAME)
+URL_GOOGLE_JSON = os.environ.get('URL_GOOGLE_JSON')
+if os.path.exists(os.path.join(BASE_DIR, 'googledrive.json')):
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(os.path.join(BASE_DIR, 'googledrive.json'))
+else:
+    gdown.download(URL_GOOGLE_JSON, quiet=False)
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(os.path.join(BASE_DIR, 'googledrive.json'))
+
+DEFAULT_FILE_STORAGE = os.environ.get('DEFAULT_FILE_STORAGE')
+GS_PROJECT_ID = os.environ.get('GS_PROJECT_ID')
+GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
+MEDIA_ROOT = 'media/'
+UPLOAD_ROOT = 'media/uploads/'
+MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_BUCKET_NAME)
 django_heroku.settings(locals())

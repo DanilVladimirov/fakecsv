@@ -4,75 +4,131 @@
 {% endblock %}
 
 {% block body %}
-    columns
-    <div id="columns">
+
+    <div id="columns" style="padding: 20px;width: 80%;">
+        <h1>{{ schema.name }}</h1>
         <form method="post">
             {% csrf_token %}
-            <button name="action" value="submit">submit</button>
-            name of schema
-            <input name="name" value="{{ schema.name }}">
-            column separator
-            <select name="separator">
-                <option value="{{ schema.separator }}">{{ schema.get_separator_display }}</option>
-                {% for separator in separators %}
-                    {% if separator.0 != schema.separator %}
-                        <option value="{{ separator.0 }}">{{ separator.1 }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-            {% for column in columns %}
-                <div style="display: flex;">
-                    <input name="column_name" value="{{ column.name }}">
-                    <input type="hidden" name="cid" value="{{ column.id }}">
-                    <select name="type">
-                        <option value="{{ column.type }}">{{ column.get_type_display }}</option>
-                        {% for type in types %}
-                            {% if column.type != type.0 %}
-                                <option value="{{ type.0 }}">{{ type.1 }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                    {% if column.type == 'integer' %}
-                        <div id="fromto">
-                            <input style="width: 50px;" type="number" name="from"
-                                   value="{{ column.specific_range.from }}">
-                            <input style="width: 50px;" type="number" name="to" value="{{ column.specific_range.to }}">
-                        </div>
-                    {% else %}
-                        <input type="hidden" name="from" value="0">
-                        <input type="hidden" name="to" value="0">
-                    {% endif %}
-                    <input type="number" min="0" name="order" value="{{ column.order }}">
-                    <button onclick="del_column({{ column.id }})">delete</button>
-                </div>
-            {% endfor %}
-        </form>
-    </div>
-    add
-    <div>
-        <form method="POST">
-            {% csrf_token %}
-            <input name="column_name" value="">
-            <select name="type" id="types">
-                <option value="none">-----</option>
-                {% for type in types %}
-                    <option value="{{ type.0 }}">{{ type.1 }}</option>
-                {% endfor %}
-            </select>
-            <div style="display: none;" id="fromto">
-                <input type="number" name="from">
-                <input type="number" name="to">
+            <button name="action" value="submit" class="btn btn-primary" style="float: right;">Submit</button>
+            <div style="width: 500px;">
+
+                <label for="name" class="form-label">name of schema</label>
+                <input id="name" name="name" class="form-control" value="{{ schema.name }}">
+                column separator
+                <select name="separator" class="form-select">
+                    <option value="{{ schema.separator }}">{{ schema.get_separator_display }}</option>
+                    {% for separator in separators %}
+                        {% if separator.0 != schema.separator %}
+                            <option value="{{ separator.0 }}">{{ separator.1 }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
             </div>
-            <input type="number" min="0" name="order">
-            <button name="action" value="add">add</button>
+            <table style="">
+                <tbody>
+                {% for column in columns %}
+                    <tr>
+                        <td>
+                            <label for="column{{ forloop.counter }}" class="form-label">Column name</label>
+                            <input id="column{{ forloop.counter }}" name="column_name" class="form-control"
+                                   value="{{ column.name }}">
+                            <input type="hidden" name="cid" value="{{ column.id }}">
+                        </td>
+                        <td>
+                            <label for="select{{ forloop.counter }}" class="form-label">Type</label>
+                            <select name="type" class="form-select" id="select{{ forloop.counter }}">
+                                <option value="{{ column.type }}">{{ column.get_type_display }}</option>
+                                {% for type in types %}
+                                    {% if column.type != type.0 %}
+                                        <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            {% if column.type == 'integer' %}
+                                <label for="from{{ forloop.counter }}" class="form-label">From</label>
+                                <input id="from{{ forloop.counter }}" class="form-control" style="width: 100px;"
+                                       type="number" name="from"
+                                       value="{{ column.specific_range.from }}">
+                            {% else %}
+                                <input type="hidden" name="from" value="0">
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if column.type == 'integer' %}
+                                <label for="to{{ forloop.counter }}" class="form-label">To</label>
+                                <input id="to{{ forloop.counter }}" class="form-control" style="width: 100px;"
+                                       type="number"
+                                       name="to"
+                                       value="{{ column.specific_range.to }}">
+                            {% else %}
+                                <input type="hidden" name="to" value="0">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <label for="order{{ forloop.counter }}" class="form-label">Order</label>
+                            <input id="order{{ forloop.counter }}" class="form-control" type="number" min="0"
+                                   name="order"
+                                   value="{{ column.order }}">
+                        </td>
+                        <td>
+                            <button style="position: absolute;text-decoration: none;" class="btn btn-link text-danger"
+                                    onclick="del_column({{ column.id }})">Delete
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </form>
+        <div class="card p-3" style="margin-top: 30px;">
+            <form method="POST">
+                {% csrf_token %}
+                <table style="">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <label for="column" class="form-label">Column name</label>
+                            <input id="column" name="column_name" value="" class="form-control">
+                        </td>
+                        <td>
+                            <label for="types" class="form-label">Type</label>
+                            <select name="type" id="types" class="form-select">
+                                <option value="none">-----</option>
+                                {% for type in types %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td style="display: none;" id="from_">
+                            <label for="from" class="form-label">From</label>
+                            <input type="number" name="from" class="form-control" style="width: 100px;">
+                        </td>
+                        <td style="display: none;" id="to_">
+                            <label for="to" class="form-label">To</label>
+                            <input id="to" type="number" name="to" class="form-control" style="width: 100px;">
+                        </td>
+                        <td>
+                            <label for="order" class="form-label">Order</label>
+                            <input id="order" type="number" min="0" name="order" class="form-control">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button name="action" value="add" class="btn btn-primary" style="margin-top: 20px;">Add column</button>
+            </form>
+        </div>
     </div>
+
     <script>
         $('#types').on('change', function () {
             if ($('#types').val() === 'integer') {
-                $('#fromto').show();
+                $('#from_').show();
+                $('#to_').show();
             } else {
-                $('#fromto').hide();
+                $('#from_').hide();
+                $('#to_').hide();
             }
         });
 

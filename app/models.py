@@ -33,6 +33,7 @@ class Schema(models.Model):
 
     name = models.CharField(max_length=200, default='')
     separator = models.CharField(choices=SEPARATORS, max_length=12, default='comma')
+    modified = models.DateField(default=datetime.date.today)
 
     def __str__(self):
         return f'schema #{self.id}'

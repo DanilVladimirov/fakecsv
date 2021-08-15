@@ -1,18 +1,33 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    {% for dataset in datasets %}
-        <div>
-            {{ dataset.id }}
-            {{ dataset.creation_date }}
-            {% if dataset.is_created %}
-                ready
+    <table class="table" style="width: 50%;margin: auto;">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Creation date</th>
+            <th scope="col">Ready</th>
+            <th scope="col">File</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for dataset in datasets %}
+            <tr>
+                <td>{{ dataset.id }}</td>
+                <td>{{ dataset.creation_date|date:"Y-m-d" }}</td>
+                <td>{% if dataset.is_created %}
+                    <span class="text-success">ready</span>
                 {% else %}
-                processing
-            {% endif %}
-            {% if dataset.is_created %}
-                <a href="{{ dataset.file }}">download</a>
-            {% endif %}
-        </div>
-    {% endfor %}
+                    <span class="text-muted">processing</span>
+                {% endif %}</td>
+                <td>{% if dataset.is_created %}
+                    <a href="{{ dataset.file }}">download</a>
+                {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
 {% endblock %}

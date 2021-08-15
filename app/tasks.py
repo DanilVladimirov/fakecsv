@@ -9,6 +9,7 @@ import csv
 from faker import Faker
 from os.path import join
 from fakecsv import settings
+from django.core.files.storage import default_storage
 
 
 def file_random_path(filename):
@@ -53,6 +54,10 @@ def generate_csv(schema, rows):
 def create_data_set(sid, rows, did):
     dataset = DataSet.objects.filter(id=did)
     schema = Schema.objects.get(id=sid)
-    path = join(settings.MEDIA_URL, generate_csv(schema, rows))
-    dataset.update(file=path, is_created=True)
+    file_name = generate_csv(schema, rows)
+
+    file = open('media/' + file_name, 'rb')
+    default_storage.save(file_name, file)
+
+    dataset.update(file=default_storage.url(file_name), is_created=True)
     return f'generated dataset'

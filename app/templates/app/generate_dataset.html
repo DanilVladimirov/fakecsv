@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <div>
-        <form method="post">
+        <form method="post" class="card p-3" style="margin: 100px auto; width: 30%;">
+            <h1>Enter the number of records</h1>
             {% csrf_token %}
-            <input type="number" name="rows" value="" min="1">
-            <button>generate</button>
+            <input type="number" name="rows" value="" min="1" class="form-control">
+            <button class="btn btn-primary" style="margin-top: 20px;">generate</button>
         </form>
-    </div>
 {% endblock %}

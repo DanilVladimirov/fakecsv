@@ -35,7 +35,7 @@ def edit_schema(request, sid):
     columns = schema.column.all().order_by('order')
     action = request.POST.get('action')
     context = {}
-
+    print(request.POST)
     if request.POST and action == 'submit':
         update_columns(request)
         update_schema(request, schema)
@@ -44,8 +44,8 @@ def edit_schema(request, sid):
         create_column(request, schema)
 
     if request.POST and action == 'del':
-
         Column.objects.get(id=request.POST.get('cid')).delete()
+        print(request.POST)
 
     context.update({'types': Column.TYPES,
                     'separators': Schema.SEPARATORS,
