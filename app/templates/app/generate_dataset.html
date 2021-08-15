@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <input type="number" name="rows" value="" min="1">
+            <button>generate</button>
+        </form>
+    </div>
+{% endblock %}

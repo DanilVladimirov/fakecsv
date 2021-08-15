@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="message type-error">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="message type-error">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {#    <form method="post" class="form-register">#}
+    {#        {% csrf_token %}#}
+    {#        <div>have account ? - <a href="{% url 'login-page' %}">login</a></div>#}
+    {#        <input type="text" name="username" placeholder="login" required>#}
+    {#        <input type="password" name="password1" placeholder="password" required>#}
+    {#        <input type="password" name="password2" placeholder="repeat password" required>#}
+    {#        <button>create account</button>#}
+    {#    </form>#}
+
+    <div class="card w-25 p-3" style="margin: 100px auto;">
+        <div class="card-body ">
+            <h2 style="margin: auto;text-align: center;margin-bottom: 50px;">Register</h2>
+            <form method="post" class="form-register">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input class="form-control" name="username" placeholder="login" required>
+                </div>
+                <div class="mb-3">
+                    <input class="form-control" type="password" name="password1" placeholder="password" required>
+                </div>
+                <div class="mb-3">
+                    <input class="form-control" type="password" name="password2" placeholder="repeat password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="float: right">Register</button>
+            </form>
+        </div>
+        <div>have account ? - <a href="{% url 'login-page' %}">login</a></div>
+    </div>
+{% endblock %}

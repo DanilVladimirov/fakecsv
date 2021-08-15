@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+    <button onclick="location.href='{% url 'create-schema-page' %}'">create</button>
+    {% for schema in schemas %}
+        <div style="display: flex">
+            <a href="{% url 'generate_dataset_page' schema.id %}">{{ schema.name }}</a>
+            <button onclick="location.href='{% url 'edit-schema-page' schema.id %}'">edit</button>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="sid" value="{{ schema.id }}">
+                <button name="action" value="del">delete</button>
+            </form>
+        </div>
+    {% endfor %}
+{% endblock %}

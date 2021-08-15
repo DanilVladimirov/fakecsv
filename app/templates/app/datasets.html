@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    {% for dataset in datasets %}
+        <div>
+            {{ dataset.id }}
+            {{ dataset.creation_date }}
+            {% if dataset.is_created %}
+                ready
+                {% else %}
+                processing
+            {% endif %}
+            {% if dataset.is_created %}
+                <a href="{{ dataset.file }}">download</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

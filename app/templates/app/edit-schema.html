@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+    columns
+    <div id="columns">
+        <form method="post">
+            {% csrf_token %}
+            <button name="action" value="submit">submit</button>
+            name of schema
+            <input name="name" value="{{ schema.name }}">
+            column separator
+            <select name="separator">
+                <option value="{{ schema.separator }}">{{ schema.get_separator_display }}</option>
+                {% for separator in separators %}
+                    {% if separator.0 != schema.separator %}
+                        <option value="{{ separator.0 }}">{{ separator.1 }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            {% for column in columns %}
+                <div style="display: flex;">
+                    <input name="column_name" value="{{ column.name }}">
+                    <input type="hidden" name="cid" value="{{ column.id }}">
+                    <select name="type">
+                        <option value="{{ column.type }}">{{ column.get_type_display }}</option>
+                        {% for type in types %}
+                            {% if column.type != type.0 %}
+                                <option value="{{ type.0 }}">{{ type.1 }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if column.type == 'integer' %}
+                        <div id="fromto">
+                            <input style="width: 50px;" type="number" name="from"
+                                   value="{{ column.specific_range.from }}">
+                            <input style="width: 50px;" type="number" name="to" value="{{ column.specific_range.to }}">
+                        </div>
+                    {% else %}
+                        <input type="hidden" name="from" value="0">
+                        <input type="hidden" name="to" value="0">
+                    {% endif %}
+                    <input type="number" min="0" name="order" value="{{ column.order }}">
+                    <button onclick="del_column({{ column.id }})">delete</button>
+                </div>
+            {% endfor %}
+        </form>
+    </div>
+    add
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <input name="column_name" value="">
+            <select name="type" id="types">
+                <option value="none">-----</option>
+                {% for type in types %}
+                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                {% endfor %}
+            </select>
+            <div style="display: none;" id="fromto">
+                <input type="number" name="from">
+                <input type="number" name="to">
+            </div>
+            <input type="number" min="0" name="order">
+            <button name="action" value="add">add</button>
+        </form>
+    </div>
+    <script>
+        $('#types').on('change', function () {
+            if ($('#types').val() === 'integer') {
+                $('#fromto').show();
+            } else {
+                $('#fromto').hide();
+            }
+        });
+
+        function del_column(cid) {
+            $.ajax({
+                type: 'POST', url: '{% url 'edit-schema-page' schema.id %}',
+                data: {'csrfmiddlewaretoken': csrf_token, 'cid': cid, 'action': 'del'},
+                dataType: 'json'
+            })
+        }
+
+    </script>
+{% endblock %}
