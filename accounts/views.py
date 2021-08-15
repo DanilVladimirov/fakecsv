@@ -32,7 +32,6 @@ class LoginUserView(View):
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
-        context = {}
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request,

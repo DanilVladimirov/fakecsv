@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import (render,
                               redirect)
 from app.models import (Schema,
@@ -23,22 +25,25 @@ def start_page(request):
     return render(request, template, context)
 
 
+@login_required
 def create_schema(request):
     new_chema = Schema.objects.create(name='new_schema')
 
     return redirect('edit-schema-page', sid=new_chema.id)
 
 
+@login_required
 def edit_schema(request, sid):
     template = 'app/edit-schema.html'
     schema = Schema.objects.get(id=sid)
     columns = schema.column.all().order_by('order')
     action = request.POST.get('action')
     context = {}
-    print(request.POST)
+
     if request.POST and action == 'submit':
         update_columns(request)
         update_schema(request, schema)
+        messages.success(request, 'saved !')
 
     if request.POST and action == 'add':
         create_column(request, schema)
@@ -55,6 +60,7 @@ def edit_schema(request, sid):
     return render(request, template, context)
 
 
+@login_required
 def generate_dataset_page(request, sid):
     template = 'app/generate_dataset.html'
     schema = Schema.objects.get(id=sid)
@@ -72,6 +78,7 @@ def generate_dataset_page(request, sid):
     return render(request, template, context)
 
 
+@login_required
 def datasets_page(request):
     template = 'app/datasets.html'
 

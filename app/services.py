@@ -9,23 +9,24 @@ def update_schema(request, schema):
 
 def update_columns(request):
     columns_dict = dict(request.POST)
-    cids = columns_dict['cid']
-    column_names = columns_dict['column_name']
-    types = columns_dict['type']
-    orders = columns_dict['order']
-    ranges_from = columns_dict.get('from')
-    ranges_to = columns_dict.get('to')
-    print(request.POST)
-    for i, cid in enumerate(cids):
-        specific_range = {}
-        if types[i] == 'integer':
-            specific_range = {'from': ranges_from[i],
-                              'to': ranges_to[i]}
+    if 'cid' in columns_dict.keys():
+        cids = columns_dict['cid']
+        column_names = columns_dict['column_name']
+        types = columns_dict['type']
+        orders = columns_dict['order']
+        ranges_from = columns_dict.get('from')
+        ranges_to = columns_dict.get('to')
 
-        Column.objects.filter(id=cid).update(name=column_names[i],
-                                             type=types[i],
-                                             order=int(orders[i]),
-                                             specific_range=specific_range)
+        for i, cid in enumerate(cids):
+            specific_range = {}
+            if types[i] == 'integer':
+                specific_range = {'from': ranges_from[i],
+                                  'to': ranges_to[i]}
+
+            Column.objects.filter(id=cid).update(name=column_names[i],
+                                                 type=types[i],
+                                                 order=int(orders[i]),
+                                                 specific_range=specific_range)
 
 
 def create_column(request, schema):

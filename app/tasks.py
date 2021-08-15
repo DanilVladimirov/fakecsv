@@ -1,9 +1,7 @@
 import os
 import random
-
-from django.contrib.auth.models import User
-
-from app.models import DataSet, Schema
+from app.models import (DataSet,
+                        Schema)
 from fakecsv.celery import app
 import csv
 from faker import Faker
@@ -54,10 +52,10 @@ def generate_csv(schema, rows):
 def create_data_set(sid, rows, did):
     dataset = DataSet.objects.filter(id=did)
     schema = Schema.objects.get(id=sid)
-    file_name = generate_csv(schema, rows)
 
+    file_name = generate_csv(schema, rows)
     file = open('media/' + file_name, 'rb')
     default_storage.save(file_name, file)
-
     dataset.update(file=default_storage.url(file_name), is_created=True)
+
     return f'generated dataset'

@@ -15,7 +15,7 @@ load_dotenv()
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['fakecsvdanya.herokuapp.com']
 
@@ -121,9 +121,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# MEDIA_URL = '/media/'
-#
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 REDIS_URL = os.environ.get('REDIS_URL')
 
 CELERY_TIMEZONE = "Europe/Kiev"
@@ -149,4 +146,7 @@ GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
 MEDIA_ROOT = 'media/'
 UPLOAD_ROOT = 'media/uploads/'
 MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_BUCKET_NAME)
+
+
+LOGIN_URL = '/accounts/login/'
 django_heroku.settings(locals())
